@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+		<script type="text/javascript">
+			var ENTER_KEY = 13;
+			var ESCAPE_KEY = 27;
+
+			// A factory function we can use to create binding handlers for specific
+			// keycodes.
+			function keyhandlerBindingFactory(keyCode) {
+				return {
+					init: function (element, valueAccessor, allBindingsAccessor, data, bindingContext) {
+						var wrappedHandler, newValueAccessor;
+
+						// wrap the handler with a check for the enter key
+						wrappedHandler = function (data, event) {
+							if (event.keyCode === keyCode) {
+								valueAccessor().call(this, data, event);
+							}
+						};
+
+						// create a valueAccessor with the options that we would want to pass to the event binding
+						newValueAccessor = function () {
+							return {
+								keyup: wrappedHandler
+							};
+						};
+
+						// call the real event binding's init function
+						ko.bindingHandlers.event.init(element, newValueAccessor, allBindingsAccessor, data, bindingContext);
+					}
+				};
+			}
+
+			// a custom binding to handle the enter key
+			ko.bindingHandlers.enterKey = keyhandlerBindingFactory(ENTER_KEY);
+
+			// another custom binding, this time to handle the escape key
+			ko.bindingHandlers.escapeKey = keyhandlerBindingFactory(ESCAPE_KEY);
+
+			CheckViewModel = function() {
+				'use strict';
+				var self = this;
+
+				self.name        = ko.observable();
+				self.description = ko.observable();
+
+				self.newItem = ko.observable();
+				self.items = ko.observableArray();
+
+				self.addItem = function () {
+					self.items.push(self.newItem());
+					self.newItem('');
+				};
+			}
+			window.addEventListener('load', function (event) {
+				ko.applyBindings(new CheckViewModel());
+			});
+		</script>
+	</head>
+	<body>
+		<h3>Lo que necesito para <input data-bind="value: name"></h3>
+		<textarea data-bind="value: description"></textarea>
+		<input type="text" data-bind="value: newItem, enterKey: addItem">
+		<ul data-bind="foreach: items">
+			<li data-bind="text: $data"></li>
+		</ul>
+	</body>
+</html>
