@@ -59,3 +59,4 @@ target/
 
 # This Project
 *.sublime-workspace
+static/vendor/

@@ -1,0 +1,23 @@
+{
+  "name": "checklist",
+  "version": "0.1.0",
+  "homepage": "https://github.com/developingo/checklist",
+  "authors": [
+    "Abraham Toriz Cruz <a.wonderful.code@gmail.com>"
+  ],
+  "description": "A checklist app",
+  "keywords": [
+    "checklist"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockoutjs": "~3.3.0"
+  }
+}
