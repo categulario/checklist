@@ -36,4 +36,21 @@
 
 	// another custom binding, this time to handle the escape key
 	ko.bindingHandlers.escapeKey = keyhandlerBindingFactory(ESCAPE_KEY);
+
+	// wrapper to hasFocus that also selects text and applies focus async
+	ko.bindingHandlers.selectAndFocus = {
+		init: function (element, valueAccessor, allBindingsAccessor, bindingContext) {
+			ko.bindingHandlers.hasFocus.init(element, valueAccessor, allBindingsAccessor, bindingContext);
+			ko.utils.registerEventHandler(element, 'focus', function () {
+				element.focus();
+			});
+		},
+		update: function (element, valueAccessor) {
+			ko.utils.unwrapObservable(valueAccessor()); // for dependency
+			// ensure that element is visible before trying to focus
+			setTimeout(function () {
+				ko.bindingHandlers.hasFocus.update(element, valueAccessor);
+			}, 0);
+		}
+	};
 }());
